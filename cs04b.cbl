@@ -192,36 +192,10 @@
              UNTIL ROW-INDX > 5
                PERFORM VARYING COL-INDX FROM 1 BY 1
                UNTIL COL-INDX > 5
-      *           DISPLAY
-      *             MYNAME
-      *             ' BOARD-VAL('
-      *             BOARD-INDX
-      *             ','
-      *             ROW-INDX
-      *             ','
-      *             COL-INDX
-      *             ') '
-      *             BOARD-VAL(BOARD-INDX,ROW-INDX,COL-INDX)
-      *           DISPLAY
-      *             MYNAME
-      *             ' DRAW-NUMBER('
-      *             NUMBERS-INDX
-      *             ') '
-      *             DRAW-NUMBER(NUMBERS-INDX)
                  IF BOARD-VAL(BOARD-INDX,ROW-INDX,COL-INDX)
                  = DRAW-NUMBER(NUMBERS-INDX)
                      SET BINGO-MARKED(BOARD-INDX,ROW-INDX,COL-INDX)
                       TO TRUE
-                   *>  DISPLAY
-                   *>    MYNAME 
-                   *>    ' BINGO-MARK('
-                   *>    BOARD-INDX
-                   *>    ','
-                   *>    ROW-INDX
-                   *>    ','
-                   *>    COL-INDX
-                   *>    ') '
-                   *>    BINGO-MARK(BOARD-INDX,ROW-INDX,COL-INDX)
                  END-IF
                END-PERFORM
              END-PERFORM
@@ -231,27 +205,14 @@
                  MOVE DRAW-NUMBER(NUMBERS-INDX) TO WINNING-NUMBER
                  ADD 1 TO BINGO-ORDER
                  MOVE BINGO-ORDER TO BOARD-BINGO-ORDER(BOARD-INDX)
-                 DISPLAY MYNAME ' bingo order ' BINGO-ORDER ' for '
-                   BOARD-INDX ',' BINGO-ROW ',' BINGO-COL
              END-IF
              IF BINGO-ORDER < BOARDS-MAX
                  SET SOMEONE-YELLS-BINGO TO FALSE
              END-IF
-             *>DISPLAY MYNAME ' BINGO-ORDER ' BINGO-ORDER
            END-PERFORM
            .
 
        2100-DID-SOMEONE-YELL-BINGO.
-           *>DISPLAY MYNAME ' 2100- A'
-           *>DISPLAY MYNAME ' BOARD-INDX ' BOARD-INDX
-           *>DISPLAY MYNAME ' BINGO-SW ' BINGO-SW
-           *>DISPLAY MYNAME ' BINGO-COUNT ' BINGO-COUNT
-           *>      DISPLAY
-           *>        MYNAME
-           *>        ' DRAW-NUMBER('
-           *>        NUMBERS-INDX
-           *>        ') '
-           *>        DRAW-NUMBER(NUMBERS-INDX)
            MOVE 0 TO BINGO-COUNT
            PERFORM VARYING ROW-INDX-B FROM 1 BY 1
            UNTIL ROW-INDX-B > 5 OR BINGO-COUNT = 5
@@ -266,7 +227,6 @@
            END-PERFORM
 
            IF BINGO-COUNT = 5
-               *>DISPLAY MYNAME ' 2100- B'
                SET SOMEONE-YELLS-BINGO TO TRUE
                SET ROW-INDX-B DOWN BY 1
                MOVE ROW-INDX-B TO BINGO-ROW
@@ -284,7 +244,6 @@
                  END-PERFORM
                END-PERFORM
                IF BINGO-COUNT = 5
-                   *>DISPLAY MYNAME ' 2100- C'
                    SET SOMEONE-YELLS-BINGO TO TRUE
                    SET COL-INDX-B DOWN BY 1
                    MOVE COL-INDX-B TO BINGO-COL
@@ -301,9 +260,6 @@
              IF BINGO-MARKED(WINNING-BOARD,ROW-INDX,COL-INDX)
                  CONTINUE
              ELSE
-                 DISPLAY MYNAME ' adding BOARD-VAL('
-                   WINNING-BOARD ',' ROW-INDX ',' COL-INDX ') '
-                   BOARD-VAL(WINNING-BOARD,ROW-INDX,COL-INDX)
                  ADD FUNCTION NUMVAL(
                      BOARD-VAL(WINNING-BOARD,ROW-INDX,COL-INDX))
                   TO WINNING-SUM
