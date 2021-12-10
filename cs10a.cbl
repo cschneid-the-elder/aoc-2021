@@ -112,6 +112,7 @@
                  WHEN ']' ADD 57    TO FILE-SCORE
                  WHEN '}' ADD 1197  TO FILE-SCORE
                  WHEN '>' ADD 25137 TO FILE-SCORE
+               END-EVALUATE
            ELSE
                continue
            END-IF
