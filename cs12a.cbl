@@ -8,24 +8,7 @@
       * This software may be modified and distributed under the terms
       * of the MIT license. See the LICENSE file for details.
       *
-      * 
-      * This is incomplete and doesn't compile.  It's as far as I got 
-      * with day 12.
-      * cobc 
-      *   -Wall 
-      *   -Wpossible-overlap 
-      *   -Wimplicit-define 
-      *   -Wcolumn-overflow 
-      *   -Wpossible-truncate 
-      *   -Wunreachable 
-      *   -fdump=ALL 
-      *   -ftraceall 
-      *   -t cs12a.lst -x -o cs12a cs12a.cbl
-      * cs12a.cbl: in paragraph '3000-PROCESS-INPUT':
-      * cs12a.cbl:246: error: 'findpath' is not defined
-      * cs12a.cbl: in paragraph '1000-PROCESS-CONNECTIONS':
-      * cs12a.cbl:352: error: 'cavinpth' is not defined
-      * cs12a.cbl:361: error: 'findpath' is not defined
+      * Still doesn't work, but at least I got past the compile errors.
       * 
        Function-ID. caveidx.
        Data Division.
@@ -37,6 +20,7 @@
            05  CONNECTION-COUNT   PIC 9(009) COMP.
            05  PATH-COUNT         PIC 9(009) COMP.
            05  CAVE-COUNT         PIC 9(009) COMP.
+           05  CURR-PATH          PIC 9(009) COMP.
 
        77  PROCESS-SW  EXTERNAL   PIC X(004).
            88  PROCESS-TEST                          VALUE 'TEST'.
@@ -126,6 +110,7 @@
            05  CONNECTION-COUNT   PIC 9(009) COMP.
            05  PATH-COUNT         PIC 9(009) COMP.
            05  CAVE-COUNT         PIC 9(009) COMP.
+           05  CURR-PATH          PIC 9(009) COMP.
 
        77  PROCESS-SW  EXTERNAL   PIC X(004).
            88  PROCESS-TEST                          VALUE 'TEST'.
@@ -186,6 +171,18 @@
            CALL 'cavedump'
 
            PERFORM 3000-PROCESS-INPUT
+
+           PERFORM VARYING PATH-IDX FROM 1 BY 1
+           UNTIL PATH-IDX > PATH-COUNT
+             DISPLAY MYNAME ' path ' PATH-IDX
+               WITH NO ADVANCING
+             PERFORM VARYING CAVE-IDX FROM 1 BY 1
+             UNTIL CAVE-IDX > PATH-LN(PATH-IDX)
+               DISPLAY SPACE PATH-CAVE(PATH-IDX,CAVE-IDX)
+                 WITH NO ADVANCING
+             END-PERFORM
+             DISPLAY SPACE
+           END-PERFORM
 
            DISPLAY MYNAME ' records read    ' WS-REC-COUNT
 
@@ -256,9 +253,10 @@
 
        3000-PROCESS-INPUT.
            INITIALIZE FIND-PATH-AREAS
+           MOVE 1 TO PATH-IDX
            MOVE caveidx(START-CAVE) TO CAVE-IDX
 
-           CALL findpath USING
+           CALL 'findpath' USING
              FIND-PATH-AREAS
            END-CALL
 
@@ -294,6 +292,7 @@
            05  CONNECTION-COUNT   PIC 9(009) COMP.
            05  PATH-COUNT         PIC 9(009) COMP.
            05  CAVE-COUNT         PIC 9(009) COMP.
+           05  CURR-PATH          PIC 9(009) COMP.
 
        77  PROCESS-SW  EXTERNAL   PIC X(004).
            88  PROCESS-TEST                          VALUE 'TEST'.
@@ -347,15 +346,21 @@
 
            MOVE INPT-AREAS TO FIND-PATH-AREAS
 
-           EVALUATE TRUE
-             WHEN CAVE(CAVE-IDX) = START-CAVE
-             WHEN CAVE-CONN(CAVE-IDX,CONN-IDX) = END-CAVE
-                  ADD 1 TO PATH-IDX
-             WHEN OTHER
-                  PERFORM 1000-PROCESS-CONNECTIONS
-                    VARYING CONN-IDX FROM 1 BY 1
-                    UNTIL CONN-IDX > CAVE-CONN-COUNT(CAVE-IDX)
-           END-EVALUATE
+           IF CAVE-CONN(CAVE-IDX,CONN-IDX) = END-CAVE
+               DISPLAY MYNAME ' path ' PATH-IDX
+                 WITH NO ADVANCING
+               PERFORM VARYING TEMP-IDX FROM 1 BY 1
+               UNTIL TEMP-IDX > PATH-LN(PATH-IDX)
+                 DISPLAY SPACE PATH-CAVE(PATH-IDX,TEMP-IDX)
+               END-PERFORM
+               DISPLAY ' '
+               ADD 1 TO PATH-IDX
+               GOBACK
+           END-IF
+
+           PERFORM 1000-PROCESS-CONNECTIONS
+             VARYING CONN-IDX FROM 1 BY 1
+             UNTIL CONN-IDX > CAVE-CONN-COUNT(CAVE-IDX)
 
            GOBACK
            .
@@ -364,7 +369,7 @@
            MOVE caveidx(CAVE-CONN(CAVE-IDX,CONN-IDX))
              TO TEMP-IDX
  
-           CALL cavinpth USING
+           CALL 'cavinpth' USING
                PATH-IDX
                CAVE-CONN(CAVE-IDX,CONN-IDX)
                CAVE-IN-PATH-SW
@@ -373,7 +378,10 @@
            EVALUATE TRUE                    ALSO TRUE
              WHEN   CAVE-IS-BIG(TEMP-IDX)   ALSO ANY
              WHEN   CAVE-IS-SMALL(TEMP-IDX) ALSO NOT CAVE-IN-PATH
-                    CALL findpath USING
+                    ADD 1 TO PATH-LN(PATH-IDX)
+                    MOVE CAVE(CAVE-IDX)
+                      TO PATH-CAVE(PATH-IDX,PATH-LN(PATH-IDX))
+                    CALL 'findpath' USING
                         FIND-PATH-AREAS
                     END-CALL
            END-EVALUATE
@@ -417,6 +425,7 @@
        Procedure Division Using
            LS-PATH-IDX
            LS-CAVE
+           LS-FOUND-SW
            .
 
            SET FOUND-IT TO FALSE
@@ -452,6 +461,7 @@
            05  CONNECTION-COUNT   PIC 9(009) COMP.
            05  PATH-COUNT         PIC 9(009) COMP.
            05  CAVE-COUNT         PIC 9(009) COMP.
+           05  CURR-PATH          PIC 9(009) COMP.
 
        77  PROCESS-SW  EXTERNAL   PIC X(004).
            88  PROCESS-TEST                          VALUE 'TEST'.
