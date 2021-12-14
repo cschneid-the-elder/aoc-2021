@@ -11,7 +11,7 @@
       * This program serves as the solution to both parts 1 and 2
       * for day 13.
       *
-       Program-ID. cs13a.
+       Program-ID. cs14a.
        Environment Division.
        Configuration Section.
        Repository.
@@ -26,7 +26,7 @@
 
        Working-Storage Section.
        01  CONSTANTS.
-           05  MYNAME             PIC X(008)         VALUE 'cs13a'.
+           05  MYNAME             PIC X(008)         VALUE 'cs14a'.
 
        01  WORK-AREAS.
            05  WS-REC-COUNT       PIC 9(009) COMP    VALUE 0.
@@ -215,6 +215,6 @@
            .
 
 
-       END PROGRAM cs13a.
+       END PROGRAM cs14a.
 
 
