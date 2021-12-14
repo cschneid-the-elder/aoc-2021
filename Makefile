@@ -5,9 +5,9 @@ CFLAGS=-Wall -Wpossible-overlap -Wimplicit-define -Wcolumn-overflow -Wpossible-t
 	echo `date` $< >>build.log
 	cobc $(CFLAGS) -t $@.lst -x -o $@ $<
 
-all: cs01a cs01b cs02a cs02b cs03a cs03b cs04a cs04b cs05a cs05b cs06a cs06b cs07a cs07b cs08a cs08b cs09a cs09b cs10a cs10b cs11a cs13a
+all: cs01a cs01b cs02a cs02b cs03a cs03b cs04a cs04b cs05a cs05b cs06a cs06b cs07a cs07b cs08a cs08b cs09a cs09b cs10a cs10b cs11a cs13a cs14a
 
-.PHONY: all test01a run01a test01b run01b test02a run02a test02b run02b test03a run03a test03b run03b test04a run04a test04b run04b test05a run05a test05b run05b test06a18 test06a80 run06a test06b18 test06b80 test06b256 run06b test07a run07a test07b run07b test08a run08a test08b run08b test09a run09a test09b run09b test10a run10a test10b run10b test11a1 test11a2 test11a3 test11a4 test11a5 test11a10 test11a100 run11a test12a1 test12a2 test12a3 run12a test13a run13a
+.PHONY: all test01a run01a test01b run01b test02a run02a test02b run02b test03a run03a test03b run03b test04a run04a test04b run04b test05a run05a test05b run05b test06a18 test06a80 run06a test06b18 test06b80 test06b256 run06b test07a run07a test07b run07b test08a run08a test08b run08b test09a run09a test09b run09b test10a run10a test10b run10b test11a1 test11a2 test11a3 test11a4 test11a5 test11a10 test11a100 run11a test12a1 test12a2 test12a3 run12a test13a run13a test14a1 test14a2 test14a3 test14a4 test14a10 run14a
 
 test01a:
 	./cs01a < ./data/01a-test.data
@@ -192,4 +192,21 @@ run13a:
 run13b:
 	./cs13a nope 0 < ./data/13a.data
 
+test14a10:
+	./cs14a test 10 < ./data/14a-test.data
+
+test14a1:
+	./cs14a test 1 < ./data/14a-test.data
+
+test14a2:
+	./cs14a test 2 < ./data/14a-test.data
+
+test14a3:
+	./cs14a test 3 < ./data/14a-test.data
+
+test14a4:
+	./cs14a test 4 < ./data/14a-test.data
+
+run14a:
+	./cs14a nope 10 < ./data/14a.data
 
