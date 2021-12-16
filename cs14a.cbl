@@ -8,9 +8,6 @@
       * This software may be modified and distributed under the terms
       * of the MIT license. See the LICENSE file for details.
       *
-      * This program serves as the solution to both parts 1 and 2
-      * for day 13.
-      *
        Program-ID. cs14a.
        Environment Division.
        Configuration Section.
